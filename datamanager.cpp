@@ -90,9 +90,11 @@ bool DataManager::assembleCsv(const QString& sheetName,const QString& col1,const
 
     std::unordered_map<QString,QString>::iterator flagIt = m_flags.find(col1);
     if(flagIt ==this->m_flags.end()||flagIt->second.isEmpty()){
+        //如果查找不到对应规则，则使用通用生成方式
         this->outputUniversal(sheetName,col1,col2,col3,col4,col5,col6);
     }
     else{
+        //使用规则进行生成
         DeviceBase* device=this->m_devices[this->m_flags[col1]];
         const QList<DataAssemble>& dataAssmble=device->m_dataAssemble;
         for(int i=0;i<dataAssmble.size();i++){

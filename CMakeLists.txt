@@ -45,6 +45,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         vivalvedevice.h vivalvedevice.cpp
         vxvalvedevice.h vxvalvedevice.cpp
         singlevalvedevice.h singlevalvedevice.cpp
+        jsonmanager.h jsonmanager.cpp
 
 
     )

@@ -1,14 +1,19 @@
 #include "attach.h"
 #include "ui_attach.h"
 
+
+
 Attach::Attach(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::Attach)
 {
     ui->setupUi(this);
     this->init();
-    this->addDefaultDevice();
+
     this->connectSignals();
+
+    this->LoadJson();
+
 }
 
 Attach::~Attach()
@@ -73,13 +78,17 @@ void Attach::on_btnSave_clicked()
         rowsData.emplaceBack(assemble);
     }
     device->RestoreAssemble(rowsData);
+
+    JsonManager::createInstance()->SaveToJson(".\\Json");
+    JsonManager::createInstance()->SaveFlagsToJson(".\\Json");
+    JsonManager::createInstance()->SaveReFlagsToJson(".\\Json");
 }
 
 void Attach::writeContent(const QList<DataAssemble>& content,int defaultRows){
 
     this->model->removeRows(0,this->model->rowCount());
     this->model->setRowCount(content.size());
-
+    ui->labelFlag->setText(this->m_dataManager->m_reFlags[ui->comboBox->currentText()]);
     for(int i=0;i<content.size();i++){
         if(i<defaultRows){
             //默认装置添加的第一列(DCS结尾)不允许编辑
@@ -129,7 +138,7 @@ void Attach::on_comboBox_currentIndexChanged(int index)
     if(index>this->m_dataManager->m_devices.size())
         return;
     DeviceBase* device=this->m_dataManager->m_devices[ui->comboBox->currentText()];
-    ui->labelFlag->setText(this->m_dataManager->m_reFlags[ui->comboBox->currentText()]);
+
     this->writeContent(device->m_dataAssemble,device->minSize);
 }
 
@@ -190,7 +199,7 @@ void Attach::init()
 {
     this->m_dataManager=DataManager::createInstance();
 
-    this->setWindowTitle("配置");
+    this->setWindowTitle("规则配置");
     this->model=new QStandardItemModel;
     //设置列数
     this->model->setColumnCount(6);
@@ -209,10 +218,15 @@ void Attach::init()
     ui->configTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
 }
 
+void Attach::SetComboxBox(int currentIndex)
+{
+    ui->comboBox->setCurrentIndex(currentIndex);
+    this->writeContent(this->m_dataManager->m_devices[ui->comboBox->currentText()]->m_dataAssemble,this->m_dataManager->m_devices[ui->comboBox->currentText()]->minSize);
+}
+
 void Attach::addDefaultDevice()
 {
-    //阻塞信号，防止添加在初始化默认项的时候触发ComboBox Index改变信号
-    ui->comboBox->blockSignals(true);
+
 
     PumpDevice* pumpDevice=new PumpDevice;
     pumpDevice->addDefaultAssemble();
@@ -235,12 +249,7 @@ void Attach::addDefaultDevice()
     this->addDevice("现场可调手阀","VX",vxValveDevice);
 
 
-
-    ui->comboBox->setCurrentIndex(0);
-    this->writeContent(this->m_dataManager->m_devices[ui->comboBox->currentText()]->m_dataAssemble,this->m_dataManager->m_devices[ui->comboBox->currentText()]->minSize);
-
-    //解除信号阻塞
-    ui->comboBox->blockSignals(false);
+    this->SetComboxBox(0);
 }
 
 void Attach::addDevice(const QString &deviceName,const QString &flagName,DeviceBase* const device)
@@ -261,6 +270,18 @@ void Attach::addDevice(const QString &deviceName,const QString &flagName,DeviceB
     //解除信号阻塞
     ui->comboBox->blockSignals(false);
 
+}
+
+void Attach::addDevice(const QList<QString>& deviceSort)
+{
+    //阻塞信号，防止添加在初始化默认项的时候触发ComboBox Index改变信号
+    ui->comboBox->blockSignals(true);
+    for(const auto& deviceName:std::as_const(deviceSort)){
+        ui->comboBox->addItem(deviceName);
+    }
+    //解除信号阻塞
+    ui->comboBox->blockSignals(false);
+    this->SetComboxBox(0);
 }
 
 //配置并弹出添加新的ComboBox Item
@@ -296,4 +317,20 @@ void Attach::on_btnAddTable_clicked()
 void Attach::on_btnModifyFlag_clicked()
 {
     this->modifyFlag();
+}
+
+void Attach::LoadJson()
+{
+    QString jsonData=JsonManager::createInstance()->OpenJsonFile(".\\Json\\devices.json");
+    QString flagsData=JsonManager::createInstance()->OpenJsonFile(".\\Json\\flags.json");
+    QString reFlagsData=JsonManager::createInstance()->OpenJsonFile(".\\Json\\reflags.json");
+    if(jsonData.isNull()||jsonData.isEmpty()){
+        this->addDefaultDevice();
+    }
+    else{
+        JsonManager::createInstance()->ParseFromJson(jsonData.toUtf8());
+        JsonManager::createInstance()->LoadFlag(flagsData.toUtf8());
+        JsonManager::createInstance()->LoadReFlag(reFlagsData.toUtf8());
+        this->addDevice(DataManager::createInstance()->m_deviceSort);
+    }
 }

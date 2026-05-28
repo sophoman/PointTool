@@ -15,6 +15,7 @@
 #include"singlevalvedevice.h" // IWYU pragma: keep
 #include"textinput.h"
 #include"datamanager.h"
+#include"jsonmanager.h"
 namespace Ui {
 class Attach;
 }
@@ -73,6 +74,12 @@ private:
     void connectSignals();
     //添加装置
     void addDevice(const QString &deviceName,const QString &flagName,DeviceBase* const device);
+    //添加装置
+    void addDevice(const QList<QString>& deviceSort);
+    //载入Json数据
+    void LoadJson();
+    //设置ComboxBox显示
+    void SetComboxBox(int currentIndex);
 };
 
 #endif // ATTACH_H

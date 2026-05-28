@@ -45,9 +45,10 @@ private:
 
 public:
     ~DataManager();
-    std::unordered_map<QString,QString> m_flags;//flag:device
-    std::unordered_map<QString,QString> m_reFlags;//device:flag
+    std::unordered_map<QString,QString> m_flags;//flag:device  泵:$  切换表的时候使用
+    std::unordered_map<QString,QString> m_reFlags;//device:flag $:泵 生成的时候使用，使用$找到装置映射后在m_device查找
     std::unordered_map<QString,DeviceBase*> m_devices;
+    QList<QString> m_deviceSort;//m_devices的顺序容器
     static DataManager* createInstance();
     //导出相关操作
     bool exportOperation();
