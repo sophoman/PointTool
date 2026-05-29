@@ -230,11 +230,13 @@ bool DataManager::readExcel(){
 
 void DataManager::clearDeviceTable()
 {
-    for(auto iter=m_dataManager->m_devices.begin();iter!=this->m_dataManager->m_devices.end();++iter){
+    for(auto iter=this->m_devices.begin();iter!=this->m_devices.end();++iter){
         if(iter->second!=nullptr){
             delete iter->second;
             iter->second=nullptr;
         }
     }
-    this->m_dataManager->m_devices.clear();
+    this->m_flags.clear();
+    this->m_reFlags.clear();
+    this->m_devices.clear();
 }

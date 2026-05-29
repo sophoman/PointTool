@@ -54,6 +54,8 @@ private slots:
     void on_btnAddTable_clicked();
     //修改标记按钮点击
     void on_btnModifyFlag_clicked();
+    //重置按钮点击
+    void on_btnReset_clicked();
 
 private:
     Ui::Attach *ui;
@@ -75,11 +77,13 @@ private:
     //添加装置
     void addDevice(const QString &deviceName,const QString &flagName,DeviceBase* const device);
     //添加装置
-    void addDevice(const QList<QString>& deviceSort);
+    void addDevice(const std::unordered_map<QString,DeviceBase*>& deviceMap);
     //载入Json数据
-    void LoadJson();
+    void loadJson();
     //设置ComboxBox显示
-    void SetComboxBox(int currentIndex);
+    void setComboBox(int currentIndex);
+    //清空ComboxBox显示
+    void clearComboBox();
 };
 
 #endif // ATTACH_H

@@ -9,17 +9,14 @@ Attach::Attach(QWidget *parent)
 {
     ui->setupUi(this);
     this->init();
-
     this->connectSignals();
-
-    this->LoadJson();
+    this->loadJson();
 
 }
 
 Attach::~Attach()
 {
     delete ui;
-
 }
 void Attach::setPos(const QPoint& pos){
     this->move(pos);
@@ -218,10 +215,17 @@ void Attach::init()
     ui->configTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
 }
 
-void Attach::SetComboxBox(int currentIndex)
+void Attach::setComboBox(int currentIndex)
 {
     ui->comboBox->setCurrentIndex(currentIndex);
     this->writeContent(this->m_dataManager->m_devices[ui->comboBox->currentText()]->m_dataAssemble,this->m_dataManager->m_devices[ui->comboBox->currentText()]->minSize);
+}
+
+void Attach::clearComboBox()
+{
+    ui->comboBox->blockSignals(true);
+    ui->comboBox->clear();
+    ui->comboBox->blockSignals(false);
 }
 
 void Attach::addDefaultDevice()
@@ -248,8 +252,8 @@ void Attach::addDefaultDevice()
     vxValveDevice->addDefaultAssemble();
     this->addDevice("现场可调手阀","VX",vxValveDevice);
 
-
-    this->SetComboxBox(0);
+    //设置到0索引 ComboBox
+    this->setComboBox(0);
 }
 
 void Attach::addDevice(const QString &deviceName,const QString &flagName,DeviceBase* const device)
@@ -265,6 +269,8 @@ void Attach::addDevice(const QString &deviceName,const QString &flagName,DeviceB
     ui->comboBox->addItem(deviceName);
     ui->labelFlag->setText(flagName);
     ui->comboBox->setCurrentIndex(ui->comboBox->count()-1);
+    if(device->sortIndex<0)
+        device->sortIndex=ui->comboBox->count()-1;
     this->m_dataManager->m_devices[ui->comboBox->currentText()]=device;
     this->writeContent(this->m_dataManager->m_devices[ui->comboBox->currentText()]->m_dataAssemble,this->m_dataManager->m_devices[ui->comboBox->currentText()]->minSize);
     //解除信号阻塞
@@ -272,16 +278,16 @@ void Attach::addDevice(const QString &deviceName,const QString &flagName,DeviceB
 
 }
 
-void Attach::addDevice(const QList<QString>& deviceSort)
+void Attach::addDevice(const std::unordered_map<QString,DeviceBase*>& deviceMap)
 {
     //阻塞信号，防止添加在初始化默认项的时候触发ComboBox Index改变信号
     ui->comboBox->blockSignals(true);
-    for(const auto& deviceName:std::as_const(deviceSort)){
-        ui->comboBox->addItem(deviceName);
+    for(auto it=deviceMap.begin();it!=deviceMap.end();++it){
+        ui->comboBox->addItem(it->first,it->second->sortIndex);
     }
     //解除信号阻塞
     ui->comboBox->blockSignals(false);
-    this->SetComboxBox(0);
+    this->setComboBox(0);
 }
 
 //配置并弹出添加新的ComboBox Item
@@ -289,7 +295,6 @@ void Attach::addNewComboBox()
 {
     this->m_addWindow.setPos(QPoint(this->pos().x()+this->m_addWindow.width(),this->pos().y()));
     this->m_addWindow.show();
-    this->m_addWindow.setDeviceTextEnable(true);
     this->m_addWindow.clearTextEdit();
 }
 
@@ -319,7 +324,7 @@ void Attach::on_btnModifyFlag_clicked()
     this->modifyFlag();
 }
 
-void Attach::LoadJson()
+void Attach::loadJson()
 {
     QString jsonData=JsonManager::createInstance()->OpenJsonFile(".\\Json\\devices.json");
     QString flagsData=JsonManager::createInstance()->OpenJsonFile(".\\Json\\flags.json");
@@ -331,6 +336,13 @@ void Attach::LoadJson()
         JsonManager::createInstance()->ParseFromJson(jsonData.toUtf8());
         JsonManager::createInstance()->LoadFlag(flagsData.toUtf8());
         JsonManager::createInstance()->LoadReFlag(reFlagsData.toUtf8());
-        this->addDevice(DataManager::createInstance()->m_deviceSort);
+        this->addDevice(DataManager::createInstance()->m_devices);
     }
 }
+void Attach::on_btnReset_clicked()
+{
+    this->m_dataManager->clearDeviceTable();
+    this->clearComboBox();
+    this->addDefaultDevice();
+}
+

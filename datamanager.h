@@ -40,15 +40,12 @@ private:
     //生成csv文件
     bool assembleCsv(const QString& sheetName,const QString& col1,const QString& col2,const QString& col3,
                      const QString& col4,const QString& col5,const QString& col6);
-    //清空装备表数据
-    void clearDeviceTable();
 
 public:
     ~DataManager();
     std::unordered_map<QString,QString> m_flags;//flag:device  泵:$  切换表的时候使用
     std::unordered_map<QString,QString> m_reFlags;//device:flag $:泵 生成的时候使用，使用$找到装置映射后在m_device查找
     std::unordered_map<QString,DeviceBase*> m_devices;
-    QList<QString> m_deviceSort;//m_devices的顺序容器
     static DataManager* createInstance();
     //导出相关操作
     bool exportOperation();
@@ -56,7 +53,8 @@ public:
     bool toCsv(const QString& fileName);
     bool toNA(const QString& fileName);
     bool toND(const QString& fileName);
-
+    //清空装备表数据
+    void clearDeviceTable();
 };
 
 #endif // DATAMANAGER_H

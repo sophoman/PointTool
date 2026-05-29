@@ -63,7 +63,6 @@ bool JsonManager::ParseFromJson(const QByteArray& jsonData)
         }
         //反序列化好的文件写入装置Map中
         DataManager::createInstance()->m_devices[key]=blockDevice;
-        DataManager::createInstance()->m_deviceSort.emplaceBack(key);
     }
     return true;
 }
