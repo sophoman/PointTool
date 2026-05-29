@@ -144,7 +144,9 @@ void Attach::on_btnDelTable_clicked()
 {
 
     int index=ui->comboBox->currentIndex();
-    if(index<5)
+    if(ui->comboBox->currentText().compare("单阀")==0||ui->comboBox->currentText().compare("四组阀")==0||
+        ui->comboBox->currentText().compare("泵")==0||ui->comboBox->currentText().compare("现场开关手阀")==0||
+        ui->comboBox->currentText().compare("现场可调手阀")==0)
         return;
 
     ui->comboBox->blockSignals(true);
@@ -269,8 +271,6 @@ void Attach::addDevice(const QString &deviceName,const QString &flagName,DeviceB
     ui->comboBox->addItem(deviceName);
     ui->labelFlag->setText(flagName);
     ui->comboBox->setCurrentIndex(ui->comboBox->count()-1);
-    if(device->sortIndex<0)
-        device->sortIndex=ui->comboBox->count()-1;
     this->m_dataManager->m_devices[ui->comboBox->currentText()]=device;
     this->writeContent(this->m_dataManager->m_devices[ui->comboBox->currentText()]->m_dataAssemble,this->m_dataManager->m_devices[ui->comboBox->currentText()]->minSize);
     //解除信号阻塞
@@ -283,7 +283,7 @@ void Attach::addDevice(const std::unordered_map<QString,DeviceBase*>& deviceMap)
     //阻塞信号，防止添加在初始化默认项的时候触发ComboBox Index改变信号
     ui->comboBox->blockSignals(true);
     for(auto it=deviceMap.begin();it!=deviceMap.end();++it){
-        ui->comboBox->addItem(it->first,it->second->sortIndex);
+        ui->comboBox->addItem(it->first);
     }
     //解除信号阻塞
     ui->comboBox->blockSignals(false);

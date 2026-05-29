@@ -29,8 +29,6 @@ public:
     virtual void addSourcePoint(const QString& name);
     //默认的数量
     int minSize=0;
-    //顺序编号
-    int sortIndex=-1;
 };
 
 #endif // DEVICEBASE_H
