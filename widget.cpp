@@ -35,7 +35,7 @@ void Widget::on_btnSelect_clicked()
         //接收选中的文件保存类型
         QString selectedFilter;
         //打开选择文件对话框
-        QString fileName=QFileDialog::getOpenFileName(this,QString("保存文件"),path,"xlsx文件 (*.xlsx);",&selectedFilter);//分割类型使用俩个分号
+        QString fileName=QFileDialog::getOpenFileName(this,QString("保存文件"),path,"xlsx文件 (*.xlsx)",&selectedFilter);//分割类型使用俩个分号
         //空字符串表示用户取消操作(关闭保存对话框或者点了取消按钮)
         if(fileName.isEmpty())
             return;
@@ -165,6 +165,12 @@ void Widget::on_IntroLabel_clicked(){
 
 //初始化相关
 void Widget::init(){
+    //窗口相关设置
+    this->setWindowTitle("对点文件生成 v4.0");
+    this->setWindowFlags(this->windowFlags() | Qt::WindowStaysOnTopHint);
+    this->setWindowIcon(QIcon(":/image/icon.jpeg"));
+    this->show();
+
     //创建配置文件管理器
     this->m_configManager=ConfigManager::createInstance();
     //创建线程管理器

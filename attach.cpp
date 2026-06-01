@@ -196,9 +196,12 @@ void Attach::onReceiveModifyText(const QString &deviceName,const QString &flagNa
 
 void Attach::init()
 {
+    this->setWindowFlags(this->windowFlags() | Qt::WindowStaysOnTopHint);
+    this->setWindowTitle("规则配置");
+
     this->m_dataManager=DataManager::createInstance();
 
-    this->setWindowTitle("规则配置");
+
     this->model=new QStandardItemModel;
     //设置列数
     this->model->setColumnCount(6);

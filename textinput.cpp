@@ -38,6 +38,7 @@ TextInput::~TextInput()
 
 void TextInput::init()
 {
+    this->setWindowFlags(this->windowFlags() | Qt::WindowStaysOnTopHint);
     this->setWindowTitle("添加");
 }
 
