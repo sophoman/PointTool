@@ -166,7 +166,7 @@ void Widget::on_IntroLabel_clicked(){
 //初始化相关
 void Widget::init(){
     //窗口相关设置
-    this->setWindowTitle("对点文件生成 v4.0");
+    this->setWindowTitle("对点文件生成 v4.1");
     this->setWindowFlags(this->windowFlags() | Qt::WindowStaysOnTopHint);
     this->setWindowIcon(QIcon(":/image/icon.jpeg"));
     this->show();

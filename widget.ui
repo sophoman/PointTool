@@ -69,7 +69,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QTextEdit" name="textEdit">
+          <widget class="EditableTextEdit" name="textEdit">
            <property name="enabled">
             <bool>true</bool>
            </property>
@@ -436,6 +436,11 @@
    <class>ClickableLabel</class>
    <extends>QLabel</extends>
    <header>clickablelabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>EditableTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header location="global">editabletextedit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

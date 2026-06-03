@@ -10,6 +10,6 @@ void PumpDevice::addDefaultAssemble(){
     this->m_dataAssemble.emplaceBack(DataAssemble{"_LR","remotepoint","PFOV","读","","ND"});
     this->m_dataAssemble.emplaceBack(DataAssemble{"_I","VISTA","PFOV","读","","ND"});
     this->m_dataAssemble.emplaceBack(DataAssemble{"_O","VOSTA","PFOV","读","","ND"});
-    this->m_dataAssemble.emplaceBack(DataAssemble{"_ST","STATUS","PFOV","写","","ND"});
+    this->m_dataAssemble.emplaceBack(DataAssemble{"_ST","STATUS","WR","写","","ND"});
     DeviceBase::addDefaultAssemble();
 }
