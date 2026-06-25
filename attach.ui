@@ -34,7 +34,7 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QWidget" name="widget_2" native="true">
-     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,0,0,0,0,0">
+     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,0,0,0,0,0,0">
       <property name="leftMargin">
        <number>9</number>
       </property>
@@ -62,6 +62,18 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="minimumSize">
+         <size>
+          <width>60</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>70</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="text">
          <string>添加表</string>
         </property>
@@ -75,8 +87,33 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="minimumSize">
+         <size>
+          <width>60</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="text">
          <string>删除表</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnReset">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>60</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>重置</string>
         </property>
        </widget>
       </item>
@@ -109,6 +146,18 @@
       </item>
       <item>
        <widget class="QPushButton" name="btnModifyFlag">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>60</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="text">
          <string>修改</string>
         </property>
@@ -182,15 +231,16 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="btnReset">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
+       <widget class="QPushButton" name="btnLoad">
         <property name="text">
-         <string>重置</string>
+         <string>载入</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnSaveTo">
+        <property name="text">
+         <string>另存</string>
         </property>
        </widget>
       </item>

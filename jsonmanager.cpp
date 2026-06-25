@@ -142,7 +142,7 @@ bool JsonManager::SaveFlagsToJson(const QString &savePath)
     doc.setObject(flagObj);
     file.setFileName(flagPath);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        qWarning() << "Cannot open file for writing:" << flagPath;
+        //qWarning() << "Cannot open file for writing:" << flagPath;
         return false;
     }
     file.write(doc.toJson(QJsonDocument::Indented));  // 格式化输出
@@ -168,7 +168,7 @@ bool JsonManager::SaveReFlagsToJson(const QString &savePath)
     doc.setObject(reFlagObj);
     file.setFileName(reFlagPath);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        qWarning() << "Cannot open file for writing:" << reFlagPath;
+        //qWarning() << "Cannot open file for writing:" << reFlagPath;
         return false;
     }
     file.write(doc.toJson(QJsonDocument::Indented));  // 格式化输出

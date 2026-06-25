@@ -349,3 +349,16 @@ void Attach::on_btnReset_clicked()
     this->addDefaultDevice();
 }
 
+
+void Attach::on_btnSaveTo_clicked()
+{
+    //另存为压缩文件，保存至指定路径
+
+}
+
+
+void Attach::on_btnLoad_clicked()
+{
+    //将压缩文件解压，复制到Json文件夹中
+}
+

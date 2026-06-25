@@ -57,6 +57,10 @@ private slots:
     //重置按钮点击
     void on_btnReset_clicked();
 
+    void on_btnSaveTo_clicked();
+
+    void on_btnLoad_clicked();
+
 private:
     Ui::Attach *ui;
     QStandardItemModel* model;
