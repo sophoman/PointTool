@@ -78,6 +78,27 @@ target_sources(Point PRIVATE editabletextedit.h editabletextedit.cpp)
 #exe图标
 set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/Image/Point.rc")
 target_sources(Point PRIVATE ${APP_ICON_RESOURCE_WINDOWS})
+#Quazip
+
+set(QUAZIP_DIR "${CMAKE_SOURCE_DIR}/bin/quazip")
+
+add_library(QuaZip SHARED IMPORTED)
+set_target_properties(QuaZip PROPERTIES
+    IMPORTED_IMPLIB "${QUAZIP_DIR}/libquazip1-qt6.dll.a"
+    IMPORTED_LOCATION "${QUAZIP_DIR}/libquazip1-qt6.dll"
+    INTERFACE_INCLUDE_DIRECTORIES "${QUAZIP_DIR}/include"
+)
+
+add_custom_command(TARGET Point POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${QUAZIP_DIR}/libquazip1-qt6.dll"
+        $<TARGET_FILE_DIR:Point>
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "E:/Coz/zh/complie/zlib-1.3.2/zlib1.dll"
+        $<TARGET_FILE_DIR:Point>
+)
+
+target_link_libraries(Point PRIVATE QuaZip)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

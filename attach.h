@@ -15,7 +15,10 @@
 #include"singlevalvedevice.h" // IWYU pragma: keep
 #include"textinput.h"
 #include"datamanager.h"
-#include"jsonmanager.h"
+#include"jsonmanager.h" // IWYU pragma: keep
+#include"JlCompress.h"  // IWYU pragma: keep
+#include"QMessageBox"
+#include"QFileDialog"
 namespace Ui {
 class Attach;
 }
@@ -54,11 +57,11 @@ private slots:
     void on_btnAddTable_clicked();
     //修改标记按钮点击
     void on_btnModifyFlag_clicked();
-    //重置按钮点击
+    // 重置按钮
     void on_btnReset_clicked();
-
+    //另存Json文件按钮
     void on_btnSaveTo_clicked();
-
+    //载入Json文件按钮
     void on_btnLoad_clicked();
 
 private:
@@ -75,6 +78,7 @@ private:
     void addDefaultDevice();
     //往ComboBox添加标签
     void addNewComboBox();
+    //修改标志
     void modifyFlag();
     //连接信号
     void connectSignals();
@@ -88,6 +92,8 @@ private:
     void setComboBox(int currentIndex);
     //清空ComboxBox显示
     void clearComboBox();
+    //载入Json文件时清空数据操作
+    void clearDataWhenLoadJson();
 };
 
 #endif // ATTACH_H

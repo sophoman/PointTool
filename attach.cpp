@@ -233,6 +233,14 @@ void Attach::clearComboBox()
     ui->comboBox->blockSignals(false);
 }
 
+void Attach::clearDataWhenLoadJson()
+{
+    //清空保存的数据
+    this->m_dataManager->clearDeviceTable();
+    //清空box中的显示
+    this->clearComboBox();
+}
+
 void Attach::addDefaultDevice()
 {
 
@@ -352,13 +360,119 @@ void Attach::on_btnReset_clicked()
 
 void Attach::on_btnSaveTo_clicked()
 {
-    //另存为压缩文件，保存至指定路径
+    // 1. 弹出保存对话框，让用户选择 .zip 文件路径
+    QString savePath = QFileDialog::getSaveFileName(this,
+        tr("另存为压缩包"),
+        QDir::homePath(),                 // 默认起始目录（可自定义）
+        tr("ZIP 压缩文件 (*.zip)")
+        );
+    if (savePath.isEmpty()) {
+        return;  // 用户取消了
+    }
+
+    // 2. 准备要压缩的文件列表（使用绝对路径，避免工作目录变化）
+    QString baseDir = QDir::currentPath();          // 或使用 QCoreApplication::applicationDirPath()
+    QStringList files;
+    files << baseDir + "/Json/devices.json"
+          << baseDir + "/Json/flags.json"
+          << baseDir + "/Json/reflags.json";
+
+    // 3. 检查每个文件是否存在
+    for (const QString &file :std::as_const(files)) {
+        if (!QFile::exists(file)) {
+            QMessageBox::warning(
+                this,
+                tr("文件缺失"),
+                tr("找不到需要压缩的文件：\n%1").arg(file)
+                );
+            return;
+        }
+    }
+
+    // 4. 执行压缩（使用 QuaZip 的 JlCompress 工具类）
+    bool success = JlCompress::compressFiles(savePath, files);
+
+    //5. 提示结果
+    if (success) {
+        QMessageBox::information(
+            this,
+            tr("压缩成功"),
+            tr("压缩包已保存至：\n%1").arg(savePath)
+            );
+    } else {
+        QMessageBox::critical(
+            this,
+            tr("压缩失败"),
+            tr("压缩过程中出现错误，请检查文件权限或磁盘空间。")
+            );
+    }
 
 }
 
 
 void Attach::on_btnLoad_clicked()
 {
-    //将压缩文件解压，复制到Json文件夹中
+    // 1. 弹出打开文件对话框，让用户选择要解压的 .zip 文件
+    QString zipPath = QFileDialog::getOpenFileName(
+        this,
+        tr("选择压缩包"),
+        QDir::homePath(),
+        tr("ZIP 压缩文件 (*.zip)")
+        );
+    if (zipPath.isEmpty()) {
+        return;  // 用户取消了
+    }
+
+    // 2. 检查压缩包是否存在
+    if (!QFile::exists(zipPath)) {
+        QMessageBox::warning(
+            this,
+            tr("文件不存在"),
+            tr("找不到指定的压缩包：\n%1").arg(zipPath)
+            );
+        return;
+    }
+
+    // 3. 确定解压目标目录（Json 文件夹）
+    QString baseDir = QCoreApplication::applicationDirPath(); // 或 QDir::currentPath()
+    QString targetDir = baseDir + "/Json";
+
+    // 4. 如果目标目录不存在，则创建它
+    QDir dir;
+    if (!dir.exists(targetDir)) {
+        if (!dir.mkpath(targetDir)) {
+            QMessageBox::critical(
+                this,
+                tr("创建目录失败"),
+                tr("无法创建目标目录：\n%1").arg(targetDir)
+                );
+            return;
+        }
+    }
+
+    // 5. 执行解压（使用 QuaZip 的 JlCompress 工具类）
+    //    extractDir 会将压缩包内的所有文件解压到指定目录，并保持原有目录结构
+    QStringList extractedFiles = JlCompress::extractDir(zipPath, targetDir);
+
+    // 6. 判断解压是否成功
+    if (extractedFiles.isEmpty()) {
+        QMessageBox::critical(
+            this,
+            tr("解压失败"),
+            tr("解压过程中出现错误，请检查压缩包是否损坏或格式不正确。")
+            );
+    } else {
+        QMessageBox::information(
+            this,
+            tr("解压成功"),
+            tr("已成功解压 %1 个文件到：\n%2").arg(extractedFiles.size()).arg(targetDir)
+            );
+    }
+
+    //清空相关内容
+    this->clearDataWhenLoadJson();
+    //重新载入Json文件
+    this->loadJson();
+
 }
 

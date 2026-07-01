@@ -11,6 +11,7 @@
 #include"exportthreadmanager.h"
 #include"configmanager.h"
 #include"attach.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class Widget;
