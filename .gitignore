@@ -162,4 +162,5 @@ CMakeLists.txt.user*
 
 # Qt Creator project files
 build/
+
 .qtcreator/
