@@ -94,6 +94,8 @@ private:
     void clearComboBox();
     //载入Json文件时清空数据操作
     void clearDataWhenLoadJson();
+    //将数据保存到Json文件夹中
+    void jsonSave();
 };
 
 #endif // ATTACH_H

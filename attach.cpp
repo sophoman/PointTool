@@ -39,7 +39,7 @@ void Attach::closeEvent(QCloseEvent *event)
     event->accept();
 }
 
-void Attach::on_btnSave_clicked()
+void Attach::jsonSave()
 {
     DeviceBase* device=this->m_dataManager->m_devices[ui->comboBox->currentText()];
     QString index0,index1,index2,index3,index4,index5;
@@ -79,6 +79,11 @@ void Attach::on_btnSave_clicked()
     JsonManager::createInstance()->SaveToJson(".\\Json");
     JsonManager::createInstance()->SaveFlagsToJson(".\\Json");
     JsonManager::createInstance()->SaveReFlagsToJson(".\\Json");
+}
+
+void Attach::on_btnSave_clicked()
+{
+    this->jsonSave();
 }
 
 void Attach::writeContent(const QList<DataAssemble>& content,int defaultRows){
@@ -360,6 +365,8 @@ void Attach::on_btnReset_clicked()
 
 void Attach::on_btnSaveTo_clicked()
 {
+    //执行一下保存Json文件确保Json文件夹存在
+    this->jsonSave();
     // 1. 弹出保存对话框，让用户选择 .zip 文件路径
     QString savePath = QFileDialog::getSaveFileName(this,
         tr("另存为压缩包"),

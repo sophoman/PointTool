@@ -84,17 +84,17 @@ set(QUAZIP_DIR "${CMAKE_SOURCE_DIR}/bin/quazip")
 
 add_library(QuaZip SHARED IMPORTED)
 set_target_properties(QuaZip PROPERTIES
-    IMPORTED_IMPLIB "${QUAZIP_DIR}/libquazip1-qt6.dll.a"
-    IMPORTED_LOCATION "${QUAZIP_DIR}/libquazip1-qt6.dll"
+    IMPORTED_IMPLIB "${QUAZIP_DIR}/dll/libquazip1-qt6.dll.a"
+    IMPORTED_LOCATION "${QUAZIP_DIR}/dll/libquazip1-qt6.dll"
     INTERFACE_INCLUDE_DIRECTORIES "${QUAZIP_DIR}/include"
 )
 
 add_custom_command(TARGET Point POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${QUAZIP_DIR}/libquazip1-qt6.dll"
+        "${QUAZIP_DIR}/dll/libquazip1-qt6.dll"
         $<TARGET_FILE_DIR:Point>
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "E:/Coz/zh/complie/zlib-1.3.2/zlib1.dll"
+        "${QUAZIP_DIR}/dll/zlib1.dll"
         $<TARGET_FILE_DIR:Point>
 )
 
