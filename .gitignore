@@ -8,8 +8,6 @@
 
 *.autosave
 
-*.a
-
 *.core
 
 *.moc
