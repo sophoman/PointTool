@@ -345,7 +345,7 @@ void Attach::loadJson()
     QString jsonData=JsonManager::createInstance()->OpenJsonFile(".\\Json\\devices.json");
     QString flagsData=JsonManager::createInstance()->OpenJsonFile(".\\Json\\flags.json");
     QString reFlagsData=JsonManager::createInstance()->OpenJsonFile(".\\Json\\reflags.json");
-    if(jsonData.isNull()||jsonData.isEmpty()){
+    if(jsonData.isNull()||jsonData.isEmpty()||flagsData.isNull()||flagsData.isEmpty()||reFlagsData.isNull()||reFlagsData.isEmpty()){
         this->addDefaultDevice();
     }
     else{
@@ -439,6 +439,40 @@ void Attach::on_btnLoad_clicked()
             );
         return;
     }
+
+    //压缩包内容检查，是否纯在需要的三个文件
+    QuaZip zip(zipPath);
+    if(zip.open(QuaZip::mdUnzip)){
+        //获取待解压文件名
+        QStringList entries=zip.getFileNameList();
+        qDebug()<<entries;
+        zip.close();
+        if(!entries.contains("devices.json")){
+            QMessageBox::critical(
+                this,
+                tr("文件缺失"),
+                tr("配置文件缺失:%1").arg("devices.json")
+                );
+            return;
+        }
+        else if(!entries.contains("flags.json")){
+            QMessageBox::critical(
+                this,
+                tr("文件缺失"),
+                tr("配置文件缺失%1").arg("flags.json")
+                );
+            return;
+        }
+        else if(!entries.contains("reflags.json")){
+            QMessageBox::critical(
+                this,
+                tr("文件缺失"),
+                tr("配置文件缺失%1").arg("reflags.json")
+                );
+            return;
+        }
+    }
+
 
     // 3. 确定解压目标目录（Json 文件夹）
     QString baseDir = QCoreApplication::applicationDirPath(); // 或 QDir::currentPath()
